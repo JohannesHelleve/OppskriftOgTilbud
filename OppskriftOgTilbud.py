@@ -5,7 +5,7 @@ import config
 API_KEY = config.api_key
 
 # Make the request to the Tjek API
-response = requests.get("https://api.tjek.no/v1/products", headers={"Authorization": "Bearer " + API_KEY}, max_retries=5)
+response = requests.get("https://api.tjek.no/v1/products", headers={"Authorization": "Bearer " + API_KEY})
 
 if response.status_code == 200:
     # Get the products from the response
