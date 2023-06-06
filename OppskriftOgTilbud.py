@@ -1,14 +1,14 @@
 import requests
 import config
 import json
+from pymongo import MongoClient
 
-endpoint = 'https://kassal.app/api/v1/'
-headers = {"Authorization": "Bearer " + config.BearerToken}
+headersKassal = {"Authorization": "Bearer " + config.BearerToken}
+headersMongo = {}
 
-response = requests.get('https://kassal.app/api/v1/products', headers=headers)
+client = MongoClient()
+db = client['test']
+response = requests.get('https://kassal.app/api/v1/products', headers=headersKassal)
 
-response_data = json.loads(response.json)
 
-response_formated = json.dumps(response_data, indent = 2 )
-
-print(response_formated)
+#print(response.json())
