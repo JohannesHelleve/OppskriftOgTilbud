@@ -2,27 +2,32 @@ import requests
 import config
 import json
 from pymongo import MongoClient
+from bson import json_util
+from ratelimit import limits
 
 headersKassal = {"Authorization": "Bearer " + config.BearerToken}
-headersMongo = {}
-
-test3 = [{'name': 'Audi', 'price': 52642},
-    {'name': 'Mercedes', 'price': 57127},
-    {'name': 'Skoda', 'price': 9000},
-    {'name': 'Volvo', 'price': 29000},
-    {'name': 'Bentley', 'price': 350000},
-    {'name': 'Citroen', 'price': 21000},
-    {'name': 'Hummer', 'price': 41400},
-    {'name': 'Volkswagen', 'price': 21600}
-    ]
 client = MongoClient(config.UserMongo)
 
 db = client.Kassal
 
-db.Test.insert_many(test3)
 
-response = requests.get('https://kassal.app/api/v1/products', headers=headersKassal)
-print(response)
+response = requests.get('https://kassal.app/api/v1/products/', headers=headersKassal)
 
-db.Kassal.insert_one(response)
+#@limits(calls=60, period=60)
+def get_grocery_data():
+    if response.status_code == 200:
+        data = response.json()
+        return data
+    else:
+        raise Exception('Error getting total items')
+
+def alter_data_bson(data):
+    dataAltered = json.loads(json_util.dumps(data))
+    return dataAltered
+
+def push_grocery_to_mongo(dataAltered):
+    db.Kassal.insert_one(dataAltered) 
+
+
+
 
