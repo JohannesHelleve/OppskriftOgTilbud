@@ -21,6 +21,7 @@ def get_grocery_data():
     else:
         raise Exception('Error getting total items')
 
+#formating the data
 def alter_data_bson(data):
     dataAltered = json.loads(json_util.dumps(data))
     return dataAltered
