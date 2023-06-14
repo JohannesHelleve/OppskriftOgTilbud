@@ -1,5 +1,5 @@
 import openai
-import config
+import config #fikse .env
 from OppskriftOgTilbud import push_grocery_to_mongo
 
 openai.api_key = config.OpenAI

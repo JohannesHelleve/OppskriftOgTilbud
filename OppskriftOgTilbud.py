@@ -1,11 +1,11 @@
 import requests
-import config
+import os
 import json
 from pymongo import MongoClient
 from bson import json_util
 from ratelimit import limits
 
-headersKassal = {"Authorization": "Bearer " + config.BearerToken}
+headersKassal = {"Authorization": "Bearer " + os.getenv(BearerToken)} #fikse .env
 client = MongoClient(config.UserMongo)
 
 db = client.Kassal
