@@ -1,18 +1,25 @@
 import requests
 import os
 import json
+from dotenv import load_dotenv
 from pymongo import MongoClient
 from bson import json_util
 from ratelimit import limits
 
-headersKassal = {"Authorization": "Bearer " + os.getenv(BearerToken)} #fikse .env
-client = MongoClient(config.UserMongo)
+load_dotenv()
+
+BearerToken = os.getenv('BearerToken')
+MongoAPI = os.getenv('MongoAPI')
+
+headersKassal = {"Authorization": "Bearer " + BearerToken} 
+client = MongoClient(MongoAPI)
 
 db = client.Kassal
 
 
 response = requests.get('https://kassal.app/api/v1/products/', headers=headersKassal)
 
+print(response)
 #@limits(calls=60, period=60)
 def get_grocery_data():
     if response.status_code == 200:

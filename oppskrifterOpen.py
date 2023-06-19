@@ -1,8 +1,13 @@
 import openai
-import config #fikse .env
+import os
+from dotenv import load_dotenv
 from OppskriftOgTilbud import push_grocery_to_mongo
 
-openai.api_key = config.OpenAI
+load_dotenv()
+
+OpenAiAPI = os.getenv('OpenAI')
+
+openai.api_key = OpenAiAPI
 
 oppskrift = openai.ChatCompletion.create(
   model="gpt-3.5-turbo",
