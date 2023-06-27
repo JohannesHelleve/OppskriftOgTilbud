@@ -33,7 +33,7 @@ def alter_data_bson(data):
     dataAltered = json.loads(json_util.dumps(data))
     return dataAltered
 
-def push_grocery_to_mongo(dataAltered):
+def push_to_mongo(dataAltered):
     db.Kassal.insert_one(dataAltered) 
 
 
