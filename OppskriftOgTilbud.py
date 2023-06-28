@@ -17,7 +17,7 @@ client = MongoClient(MongoAPI)
 db = client.Kassal
 
 
-response = requests.get('https://kassal.app/api/v1/products/?search=fajita mix&size=60&sort=price_desc', headers=headersKassal)
+response = requests.get('https://kassal.app/api/v1/products/?search=hvitløk&sort=price_asc&price_min=1', headers=headersKassal)
 
 print(response)
 #@limits(calls=60, period=60)
@@ -28,14 +28,12 @@ def get_grocery_data():
     else:
         raise Exception('Error getting total items')
 
-"""responesFormated = json.dumps(get_grocery_data()['data'][0], indent=2)
-print(responesFormated)
-print(type(responesFormated))"""
-print(type(get_grocery_data()['data'][0]))
+groceryData = get_grocery_data()
+print(type(groceryData))
 i = 0
-print(len(get_grocery_data()['data']))
-while i < len(get_grocery_data()['data']):
-   print(f"{get_grocery_data()['data'][i]['name']} koster {get_grocery_data()['data'][i]['price_history'][0]['price']} kr idag {get_grocery_data()['data'][i]['store']['name']}")
+
+while i < len(groceryData['data']):
+   print(f"{groceryData['data'][i]['name']} koster {groceryData['data'][i]['price_history'][0]['price']} kr idag {groceryData['data'][i]['store']['name']}")
    i += 1
 
 

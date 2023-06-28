@@ -2,7 +2,7 @@ import json
 from oppskrifterOpen import make_recipe
 from OppskriftOgTilbud import push_to_mongo, get_grocery_data
 
-#recipe = make_recipe()
+"""recipe = make_recipe()"""
 
 
 """
@@ -22,6 +22,18 @@ f = open('oppskirft.json')
 
 data = json.load(f)
 
-print(data['choices'][0]['message']['content'])
-print(type(data))
-print(get_grocery_data())
+message2 = data['choices'][0]['message']['content']
+dataDict = json.loads(message2)
+print(message2)
+print(type(dataDict))
+
+def match_price_to_item(recipeJson):
+    i = 0
+    recipeItemsLen = len(recipeJson['ingredients'])
+    while i < recipeItemsLen:
+        print(f'{recipeJson["ingredients"][i]["amount"]} {recipeJson["ingredients"][i]["unit"]} {recipeJson["ingredients"][i]["keyword"]}')
+        i += 1
+        if i == recipeItemsLen :
+            break
+
+match_price_to_item(dataDict)
