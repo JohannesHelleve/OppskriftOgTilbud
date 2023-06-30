@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from pymongo import MongoClient
 from bson import json_util
 from ratelimit import limits
-import argparse
+import sys
 
 load_dotenv()
 
@@ -21,13 +21,22 @@ db = client.Kassal
 
 #@limits(calls=60, period=60)
 def get_grocery_data(item):
-    response = requests.get(f'https://kassal.app/api/v1/products/?search={item}&sort=price_asc&price_min=1', headers=headersKassal)
+    response = requests.get(f'https://kassal.app/api/v1/products/?search={item}&sort=price_asc&price_min=1&size=5', headers=headersKassal)
+    print(response.json())
     if response.status_code == 200:
         data = response.json()
-        return data
+        prettyData = data_to_pretty_list(data)
+        return prettyData
     else:
         raise Exception('Error getting total items')
 
+def data_to_pretty_list(data):
+    i = 0
+    prettyList = []
+    while i < len(data['data']):
+        prettyList.append({data['data'][i]['name'], data['data'][i]['price_history'][0]['price'], data['data'][i]['store']['name'] })
+        i += 1
+    return prettyList
 """groceryData = get_grocery_data()
 print(type(groceryData))
 i = 0
@@ -45,11 +54,6 @@ def alter_data_bson(data):
 def push_to_mongo(dataAltered):
     db.Kassal.insert_one(dataAltered) 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Searches for the item in the Kassal API')
-    parser.add_argument('item', type=str, help='Name of the item')
 
-    args = parser.parse_args()
-    get_grocery_data(args)
 
 

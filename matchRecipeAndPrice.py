@@ -1,6 +1,6 @@
 import json
 from oppskrifterOpen import make_recipe
-from OppskriftOgTilbud import push_to_mongo, get_grocery_data
+from OppskriftOgTilbud import push_to_mongo, get_grocery_data, data_to_pretty_list
 
 #recipe = make_recipe()
 
@@ -36,5 +36,5 @@ def get_ingredients(recipeJson):
     return ingredients
 
 print(get_ingredients(dataDict))
-print(get_grocery_data(23))
+print(get_grocery_data('Hansa lite'))
 #match_price_to_item(make_string_dict(recipe))
