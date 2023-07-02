@@ -31,4 +31,26 @@ def make_recipe():
   )
   return jsonOppskrift
 
+#kan brukes for å finne ut vekt av en del av ingrediensen, men og hente ut vekt fra title til ingrediensen. 
+def get_weight_ingrdient(ingredient):
+  vekt = openai.ChatCompletion.create(
+    model="gpt-3.5-turbo",
+    messages=[{"role":"system", "content": f"Hvor mange gram veier en {ingredient}?"}],
+    temperature=1,
+    max_tokens=200,
+    top_p=1,
+    frequency_penalty=0,
+    presence_penalty=0
+  )
+  dict = openai.ChatCompletion.create(
+    model="gpt-3.5-turbo",
+    messages=[{"role":"system", "content": f"Fra følgende tekst hent navn på ingrediensen og vekt i gram, og lagre svarene i json format. La vekten være Null hvis den ikke kan bli hentet. {vekt}"}],
+    temperature=1,
+    max_tokens=200,
+    top_p=1,
+    frequency_penalty=0,
+    presence_penalty=0
+  )
+  return dict
 
+print(get_weight_ingrdient('Pasta 500g'))

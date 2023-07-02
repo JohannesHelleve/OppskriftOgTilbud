@@ -36,5 +36,5 @@ def get_ingredients(recipeJson):
     return ingredients
 
 print(get_ingredients(dataDict))
-print(get_grocery_data('Hansa lite'))
+print(get_grocery_data('Penne'))
 #match_price_to_item(make_string_dict(recipe))

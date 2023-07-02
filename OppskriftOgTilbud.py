@@ -34,7 +34,7 @@ def data_to_pretty_list(data):
     i = 0
     prettyList = []
     while i < len(data['data']):
-        prettyList.append({data['data'][i]['name'], data['data'][i]['price_history'][0]['price'], data['data'][i]['store']['name'] })
+        prettyList.append([data['data'][i]['name'], data['data'][i]['price_history'][0]['price'], data['data'][i]['store']['name'] ])
         i += 1
     return prettyList
 """groceryData = get_grocery_data()
