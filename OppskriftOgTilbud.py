@@ -22,7 +22,6 @@ db = client.Kassal
 #@limits(calls=60, period=60)
 def get_grocery_data(item):
     response = requests.get(f'https://kassal.app/api/v1/products/?search={item}&sort=price_asc&price_min=1&size=5', headers=headersKassal)
-    print(response.json())
     if response.status_code == 200:
         data = response.json()
         prettyData = data_to_pretty_list(data)

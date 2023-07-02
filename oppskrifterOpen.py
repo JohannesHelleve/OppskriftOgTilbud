@@ -2,6 +2,7 @@ import openai
 import os
 from dotenv import load_dotenv
 from OppskriftOgTilbud import push_to_mongo
+import json
 
 load_dotenv()
 
@@ -12,7 +13,7 @@ openai.api_key = OpenAiAPI
 def make_recipe():
   oppskrift = openai.ChatCompletion.create(
     model="gpt-3.5-turbo",
-    messages=[{"role":"system", "content": "Lag en oppskrift , formater oppskriften som markdown,\ngjør alle ingrediensene om til en link hvor linken har følgende format, bytt ut SØKEORD\nmed ett naturlig søkeord for ingrediensen [https://kassal.app/varer?sok=[SØKEORD]](https://kassal.app/varer?sok=%5BS%C3%98KEORD%5D)\n\nInkluder navnet på matretten, en beskrivelse på ca 200 ord i begynnelsen av oppskriften og en liste over alle ingrediensene.\n\nEksempel på ingredientsliste format\n\n- 2 fedd [hvitløk](https://kassal.app/varer?sok=hvitl%C3%B8k)\n- Salt og pepper\n- 1 ts [paprikapulver](https://kassal.app/varer?sok=paprikapulver)\n- 1 ts [tørket oregano](https://kassal.app/varer?sok=oregano)"}],
+    messages=[{"role":"system", "content": "Lag en oppskrift , formater oppskriften som markdown\n\nInkluder navnet på matretten, en beskrivelse på ca 200 ord i begynnelsen av oppskriften og en liste over alle ingrediensene.\n\nEksempel på ingredientsliste format\n\n- 2 fedd [hvitløk]\n- Salt og pepper\n- 1 ts [paprikapulver]\n- 1 ts [tørket oregano]"}],
     temperature=1,
     max_tokens=1505,
     top_p=1,
@@ -42,7 +43,7 @@ def get_weight_ingrdient(ingredient):
     frequency_penalty=0,
     presence_penalty=0
   )
-  dict = openai.ChatCompletion.create(
+  vektDict = openai.ChatCompletion.create(
     model="gpt-3.5-turbo",
     messages=[{"role":"system", "content": f"Fra følgende tekst hent navn på ingrediensen og vekt i gram, og lagre svarene i json format. La vekten være Null hvis den ikke kan bli hentet. {vekt}"}],
     temperature=1,
@@ -51,6 +52,27 @@ def get_weight_ingrdient(ingredient):
     frequency_penalty=0,
     presence_penalty=0
   )
-  return dict
 
-print(get_weight_ingrdient('Pasta 500g'))
+  if isinstance(vektDict, dict):
+    return vektDict
+  else:
+    raise Exception("Open didnt returned a dict, try the function again")
+
+def get_ingredients(message):
+    recipeJson = make_string_dict(message)
+    ingredients = []
+    i = 0
+    recipeItemsLen = len(recipeJson['ingredients'])
+    while i < recipeItemsLen:
+        ingredient = [recipeJson["ingredients"][i]["amount"], recipeJson["ingredients"][i]["unit"], recipeJson["ingredients"][i]["keyword"]]
+        ingredients.append(ingredient)
+        i += 1
+        if i == recipeItemsLen :
+            break
+    return ingredients
+
+def make_string_dict(message):
+    string = message['choices'][0]['message']['content']
+    stringAsDict = json.loads(string)
+    return stringAsDict
+
